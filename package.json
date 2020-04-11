@@ -1,0 +1,42 @@
+{
+  "name": "twitchtv-channel-notifier",
+  "version": "1.0.0",
+  "description": "Notify via Telegram bot if a Twitch TV channel is live.",
+  "main": "src/index.js",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "wt": "wt-cli",
+    "wt:serve": "cross-env NODE_ENV=local wt serve . --secrets-file ./.env --hostname localhost --port 1234",
+    "wt:create": "wt create -b . --secrets-file ./.env --name twitchtv-channel-notifier",
+    "wt:cron": "wt cron create --schedule \"2 * * * *\" -b . --secrets-file ./.env --name twitchtv-channel-notifier",
+    "wt:logs": "wt logs"
+  },
+  "keywords": [
+    "webtask.io",
+    "cronjob",
+    "twitch.tv",
+    "telegrambot"
+  ],
+  "author": "Micael Levi <mykael2010@hotmail.com> (https://micalevisk.github.io)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micalevisk/twitchtv-channel-notifier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/micalevisk/twitchtv-channel-notifier/issues"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "slimbot": "^4.6.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "prettier": "^2.0.4",
+    "wt-cli": "^11.0.2"
+  }
+}
