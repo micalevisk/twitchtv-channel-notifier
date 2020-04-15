@@ -1,5 +1,5 @@
 const tgBot = require('./tgBot');
-const { userIsLive } = require('./lib');
+const twitchAPI = require('./twitchAPI');
 const { readFromStorage, writeToStorage } = require('./webtaskio-utils');
 
 async function task(ctx) {
@@ -17,21 +17,27 @@ async function task(ctx) {
 
   const { CLIENT_ID, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, CHANNEL_ID, CHANNEL_NAME } = ctx.secrets;
 
-  const { deleteMessage, sendMessage } = tgBot(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID);
+  const bot = tgBot(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID);
+  const api = twitchAPI(CLIENT_ID, CHANNEL_ID);
 
   try {
-    const [isLive, { lastRunIsLive, lastMsgId }] = await Promise.all([
-      userIsLive(CHANNEL_ID, CLIENT_ID),
+    const [{ isLive, ...streamData }, { lastRunIsLive, lastMsgId }] = await Promise.all([
+      api.getStream(),
       getLastSavedData(),
     ]);
 
     if (lastMsgId && !isLive) {
-      await deleteMessage(lastMsgId).catch(console.error);
+      await bot.deleteMessage(lastMsgId).catch(console.error);
     }
 
     let lastMessageSent = null;
     if (isLive && !lastRunIsLive) {
-      lastMessageSent = await sendMessage(`🔴 O canal twitch.tv/${CHANNEL_NAME} está ao vivo!`);
+      const msg = [
+        `🔴 <code>${streamData.title}</code>`,
+        `O canal twitch.tv/${CHANNEL_NAME} está <b>ao vivo</b>!`,
+      ].join('\n');
+
+      lastMessageSent = await bot.sendMessage(msg);
     }
 
     await saveLastRun(isLive, lastMessageSent);
