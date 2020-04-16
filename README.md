@@ -1,25 +1,15 @@
 # twitchtv-channel-notifier
 
-```bash
-npm ci
-npm run wt init ## you must have a webtask.io account
-
-cp .env.example .env ## and setup your secrets
-```
-
 ## Development
 
 ```bash
-npm run wt:serve
+npm ci
+cp .env.example .env ## and setup your env. vars
+cp storage.json.example storage.json
+npm run dev
 ```
 
 ## Deploy
 
-To avoid the issue https://github.com/auth0/wt-cli/issues/157 we can't simple run the npm-script `wt:cron` but
-
-```bash
-npm run wt:create
-```
-
-and now the task is available on your account at webtask.io  
-Go to https://webtask.io/make to manually update the Scheduler on GUI. You can use the cron (_an advanced schedule_): [`2 * * * *`](https://crontab.guru/#2_*_*_*_*)
+Put the values of your `.env` file as secrets in **Settings > Secrets**  
+and enable GitHub Actions feature under **Settings > Actions**

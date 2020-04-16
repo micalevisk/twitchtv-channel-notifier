@@ -1,23 +1,19 @@
 {
   "name": "twitchtv-channel-notifier",
-  "version": "1.0.0",
-  "description": "Notify via Telegram bot if a Twitch TV channel is live.",
-  "main": "src/index.js",
+  "version": "2.0.0",
+  "description": "Notify through Telegram bot if a Twitch TV channel is live.",
+  "main": "./index.js",
   "engineStrict": true,
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
-    "format": "prettier --write .",
-    "wt": "wt-cli",
-    "wt:serve": "cross-env NODE_ENV=local wt serve . --secrets-file ./.env --hostname localhost --port 1234",
-    "wt:create": "wt create -b . --secrets-file ./.env --name twitchtv-channel-notifier",
-    "wt:cron": "wt cron create --schedule \"2 * * * *\" -b . --secrets-file ./.env --name twitchtv-channel-notifier",
-    "wt:logs": "wt logs"
+    "start": "node .",
+    "dev": "nodemon -e js . storage.json",
+    "format": "prettier --write ."
   },
   "keywords": [
-    "webtask.io",
-    "cronjob",
+    "gh-actions",
     "twitch.tv",
     "telegrambot"
   ],
@@ -31,12 +27,12 @@
     "url": "https://github.com/micalevisk/twitchtv-channel-notifier/issues"
   },
   "dependencies": {
+    "dotenv-safe": "^8.2.0",
     "node-fetch": "^2.6.0",
     "slimbot": "^4.6.3"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
-    "prettier": "^2.0.4",
-    "wt-cli": "^11.0.2"
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.4"
   }
 }

@@ -1,0 +1,88 @@
+name: Run
+
+on:
+  schedule:
+    - cron: '2 * * * *' # At minute 2
+  push:
+    branches: [master]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_PATH: current-artifact
+      ARTIFACT_NAME: last-storage-data
+      STORAGE_FILENAME: storage.json
+
+    steps:
+      - name: Load the last uploaded artifact content to output
+        id: last_artifact_meta
+        uses: micalevisk/last-artifact-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get content of the last artifact
+        if: success() && steps.last_artifact_meta.outputs.loaded == 'true' #§
+        id: last_artifact
+        uses: gr2m/get-json-paths-action@v1.0.4
+        with:
+          json: '${{ steps.last_artifact_meta.outputs.content }}'
+          content: '${{ env.STORAGE_FILENAME }}'
+      - name: Display the last uploaded storage data
+        if: success() && steps.last_artifact_meta.outputs.loaded == 'true' #§
+        run: echo '${{ steps.last_artifact.outputs.content }}'
+
+      - uses: actions/checkout@v2
+        if: success()
+
+      - name: Save the last uploaded storage content
+        if: success() && steps.last_artifact_meta.outputs.loaded == 'true' #§
+        run: echo '${{ steps.last_artifact.outputs.content }}' > "${STORAGE_FILENAME}"
+      - name: Create an empty storage file
+        if: success() && steps.last_artifact_meta.outputs.loaded != 'true'
+        run: echo '{}' > "${STORAGE_FILENAME}"
+
+      - run: cat "${STORAGE_FILENAME}"
+
+      - uses: actions/setup-node@v1
+        if: success()
+        with:
+          node-version: '12.x'
+      - name: Cache Node.js modules
+        if: success()
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install NPM dependencies (using the lock file)
+        run: npm ci --prod
+
+      - name: Create path to artifact
+        if: success()
+        run: mkdir -v -p ${ARTIFACT_PATH}
+      - name: Run the task
+        if: success()
+        id: last_scrap
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CHANNEL_NAME: ${{ secrets.TWITCH_CHANNEL_NAME }}
+        run: |
+          scrap_output_path="${ARTIFACT_PATH}/${STORAGE_FILENAME}"
+          ( npm start "$STORAGE_FILENAME" ) && cp "$STORAGE_FILENAME" "$scrap_output_path"
+      - name: Upload an artifact with the last content of storage file
+        uses: actions/upload-artifact@v1
+        if: success()
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_PATH }}
+      - name: Delete all artifacts but the last uploaded
+        if: success()
+        uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          expire-in: 2m # Assuming the last upload didn’t happen in the last 2 minutes.
