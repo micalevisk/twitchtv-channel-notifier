@@ -2,7 +2,7 @@ name: Run
 
 on:
   schedule:
-    - cron: '2 * * * *' # At minute 2
+    - cron: '2-59/30 * * * *' # https://crontab.guru/#2-59/30_*_*_*_*
   push:
     branches: [master]
 
