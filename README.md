@@ -1,5 +1,7 @@
 # twitchtv-channel-notifier
 
+![Run](https://github.com/micalevisk/twitchtv-channel-notifier/workflows/Run/badge.svg?event=schedule)
+
 ## Development
 
 ```bash
