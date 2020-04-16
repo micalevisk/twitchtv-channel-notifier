@@ -1,5 +1,5 @@
-const tgBot = require('./tgBot');
-const twitchAPI = require('./twitchAPI');
+const tgBot = require('./telegram-bot');
+const twitchAPI = require('./twitch-api');
 const { readFromStorage, writeToStorage } = require('./webtaskio-utils');
 
 async function task(ctx) {
@@ -15,14 +15,14 @@ async function task(ctx) {
   };
   const getLastSavedData = () => readFromStorage(ctx);
 
-  const { CLIENT_ID, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, CHANNEL_ID, CHANNEL_NAME } = ctx.secrets;
+  const { CLIENT_ID, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, CHANNEL_NAME } = ctx.secrets;
 
   const bot = tgBot(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID);
-  const api = twitchAPI(CLIENT_ID, CHANNEL_ID);
+  const api = twitchAPI(CLIENT_ID);
 
   try {
     const [{ isLive, ...streamData }, { lastRunIsLive, lastMsgId }] = await Promise.all([
-      api.getStream(),
+      api.getStream(CHANNEL_NAME),
       getLastSavedData(),
     ]);
 
@@ -30,7 +30,7 @@ async function task(ctx) {
       await bot.deleteMessage(lastMsgId).catch(console.error);
     }
 
-    let lastMessageSent = null;
+    let lastMessageSent;
     if (isLive && !lastRunIsLive) {
       const msg = [
         `🔴 <code>${streamData.title}</code>`,
@@ -42,7 +42,7 @@ async function task(ctx) {
 
     await saveLastRun(isLive, lastMessageSent);
 
-    return { ok: true, isLive };
+    return { ok: true, isLive, messageSent: !!lastMessageSent };
   } catch (err) {
     console.error(err);
     return { ok: false, err: err.message || err };
