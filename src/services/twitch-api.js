@@ -16,7 +16,10 @@ module.exports = function twitchAPI(clientId) {
   const getStream = (userLogin) =>
     fetch(`${baseURL}/streams/?${prependWithUserLogin(userLogin)}`, opts)
       .then((res) => res.json())
-      .then(({ data }) => ({ isLive: data.length > 0 && data[0].type === 'live', ...data[0] }));
+      .then(({ data }) => ({
+        isLive: data.length > 0 && data[0].type === 'live',
+        ...data[0],
+      }));
 
   return {
     getStream,

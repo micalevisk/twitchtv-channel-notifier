@@ -18,7 +18,7 @@ module.exports = async (storage, ctx) => {
   let lastMessageSent;
   if (isLive && !lastRunIsLive) {
     const msg = [
-      `<code>${streamData.title}</code>`,
+      `<code>${bot.safeMsg(streamData.title)}</code>`,
       `🔴 O canal twitch.tv/${channelName} está <b>ao vivo</b>!`,
     ].join('\n');
     lastMessageSent = await bot.sendMessage(msg);
@@ -26,6 +26,8 @@ module.exports = async (storage, ctx) => {
 
   return {
     isLive,
-    idLastMessageSent: idLastMessageSent || lastMessageSent && lastMessageSent.result.message_id,
+    idLastMessageSent:
+      idLastMessageSent ||
+      (lastMessageSent && lastMessageSent.result.message_id),
   };
 };
