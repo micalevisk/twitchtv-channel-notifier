@@ -12,20 +12,20 @@ module.exports = async (storage, ctx) => {
 
   if (idLastMessageSent && !isLive) {
     await bot.deleteMessage(idLastMessageSent).catch(console.error);
+    idLastMessageSent = null;
   }
 
   let lastMessageSent;
   if (isLive && !lastRunIsLive) {
     const msg = [
-      `🔴 <code>${streamData.title}</code>`,
-      `O canal twitch.tv/${channelName} está <b>ao vivo</b>!`,
+      `<code>${streamData.title}</code>`,
+      `🔴 O canal twitch.tv/${channelName} está <b>ao vivo</b>!`,
     ].join('\n');
-
     lastMessageSent = await bot.sendMessage(msg);
   }
 
   return {
     isLive,
-    idLastMessageSent: lastMessageSent && lastMessageSent.result.message_id,
+    idLastMessageSent: idLastMessageSent || lastMessageSent && lastMessageSent.result.message_id,
   };
 };
