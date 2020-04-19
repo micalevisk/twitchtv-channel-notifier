@@ -2,7 +2,8 @@ const tgBot = require('./services/telegram-bot');
 const twitchAPI = require('./services/twitch-api');
 
 module.exports = async (storage, ctx) => {
-  const { isLive: lastRunIsLive, idLastMessageSent } = storage;
+  let { idLastMessageSent } = storage;
+  const { isLive: lastRunIsLive } = storage;
   const { twitchClientId, telegramBotToken, telegramChatId, channelName } = ctx;
 
   const bot = tgBot(telegramBotToken, telegramChatId);
