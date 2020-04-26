@@ -15,32 +15,34 @@ jobs:
       STORAGE_FILENAME: storage.json
 
     steps:
-      - name: Load the last uploaded artifact content to output
-        id: last_artifact_meta
-        uses: micalevisk/last-artifact-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get content of the last artifact
-        if: success() && steps.last_artifact_meta.outputs.loaded == 'true' #§
-        id: last_artifact
-        uses: gr2m/get-json-paths-action@v1.0.4
-        with:
-          json: '${{ steps.last_artifact_meta.outputs.content }}'
-          content: '${{ env.STORAGE_FILENAME }}'
-      - name: Display the last uploaded storage data
-        if: success() && steps.last_artifact_meta.outputs.loaded == 'true' #§
-        run: echo '${{ steps.last_artifact.outputs.content }}'
-
       - uses: actions/checkout@v2
-        if: success()
 
-      - name: Save the last uploaded storage content
-        if: success() && steps.last_artifact_meta.outputs.loaded == 'true' #§
-        run: echo '${{ steps.last_artifact.outputs.content }}' > "${STORAGE_FILENAME}"
-      - name: Create an empty storage file
-        if: success() && steps.last_artifact_meta.outputs.loaded != 'true'
-        run: echo '{}' > "${STORAGE_FILENAME}"
+      - name: Download the last artifact content and create the `storage.json` file
+        env:
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+
+          ## https://developer.github.com/v3/actions/artifacts/#list-artifacts-for-a-repository
+          artifact_id=$(curl -fs -u ${REPO%/*}:${GH_TOKEN} "https://api.github.com/repos/${REPO}/actions/artifacts?per_page=1" | jq '.artifacts[0].id')
+          if [ "$artifact_id" = "null" ]; then ## There is no artifact uploaded
+            echo '{}' > $STORAGE_FILENAME
+          else
+            artifact="last_artifact.zip"
+            echo "Will download the artifact with id $artifact_id"
+
+            ## https://developer.github.com/v3/actions/artifacts/#download-an-artifact
+            curl -fL -u ${REPO%/*}:${GH_TOKEN} -o $artifact "https://api.github.com/repos/${REPO}/actions/artifacts/${artifact_id}/zip"
+            file $artifact
+            unzip -o $artifact
+
+            test -f "$STORAGE_FILENAME" || {
+              echo "The last artifact downloaded doesn't have the file '$STORAGE_FILENAME'"
+              unzip -l $artifact
+              exit 1
+            }
+          fi
 
       - run: cat "${STORAGE_FILENAME}"
 
