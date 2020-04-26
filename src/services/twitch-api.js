@@ -12,16 +12,14 @@ module.exports = function twitchAPI(clientId) {
 
   const prependWithUserLogin = makePrependWord('user_login=');
 
-  /** @see https://dev.twitch.tv/docs/api/reference#get-streams */
-  const getStream = (userLogin) =>
-    fetch(`${baseURL}/streams/?${prependWithUserLogin(userLogin)}`, opts)
-      .then((res) => res.json())
-      .then(({ data }) => ({
-        isLive: data.length > 0 && data[0].type === 'live',
-        ...data[0],
-      }));
-
   return {
-    getStream,
+    /** @see https://dev.twitch.tv/docs/api/reference#get-streams */
+    getStream: (userLogin) =>
+      fetch(`${baseURL}/streams/?${prependWithUserLogin(userLogin)}`, opts)
+        .then((res) => res.json())
+        .then(({ data }) => ({
+          isLive: data.length > 0 && data[0].type === 'live',
+          ...data[0],
+        })),
   };
 };
