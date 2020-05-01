@@ -2,11 +2,16 @@ const fetch = require('node-fetch').default;
 
 const makePrependWord = (word) => (text) => word + text;
 
-module.exports = function twitchAPI(clientId) {
+/**
+ * @param {string} clientId - Your app client ID.
+ * @param {string} oauthAccessToken - Your app access token.
+ */
+module.exports = function twitchAPI(clientId, oauthAccessToken) {
   const baseURL = 'https://api.twitch.tv/helix';
   const opts = {
     headers: {
       'Client-ID': clientId,
+      Authorization: 'Bearer ' + oauthAccessToken,
     },
   };
 

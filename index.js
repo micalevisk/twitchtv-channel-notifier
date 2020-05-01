@@ -14,10 +14,12 @@ const storageFilename = process.argv[2];
 const storage = readJson(storageFilename);
 
 task(storage, {
-  twitchClientId: process.env.TWITCH_CLIENT_ID,
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
   telegramChatId: process.env.TELEGRAM_CHAT_ID,
-  channelName: process.env.TWITCH_CHANNEL_NAME,
+
+  twitchChannel: process.env.TWITCH_CHANNEL,
+  twitchClientId: process.env.TWITCH_CLIENT_ID,
+  twitchOAuthAccessToken: process.env.TWITCH_OAUTH_ACCESS_TOKEN,
 })
   .then((res) => dumpJson(storageFilename, res))
   .catch((err) => {
