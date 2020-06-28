@@ -23,6 +23,6 @@ task(storage, {
 })
   .then((res) => dumpJson(storageFilename, res))
   .catch((err) => {
+    console.log('Will exit with code', process.exitCode);
     console.error(err);
-    process.exit(1);
   });

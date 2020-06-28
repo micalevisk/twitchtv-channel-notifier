@@ -22,9 +22,15 @@ module.exports = function twitchAPI(clientId, oauthAccessToken) {
     getStream: (userLogin) =>
       fetch(`${baseURL}/streams/?${prependWithUserLogin(userLogin)}`, opts)
         .then((res) => res.json())
-        .then(({ data }) => ({
-          isLive: data.length > 0 && data[0].type === 'live',
-          ...data[0],
-        })),
+        .then(({ data, error, message }) => {
+          if (error) {
+            process.exitCode = 11;
+            throw new Error(`${error}: ${message}`);
+          }
+          return {
+            isLive: data.length > 0 && data[0].type === 'live',
+            ...data[0],
+          };
+        }),
   };
 };
