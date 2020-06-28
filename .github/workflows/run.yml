@@ -72,6 +72,9 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          REPO: ${{ secrets.REPO }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           TWITCH_OAUTH_ACCESS_TOKEN: ${{ secrets.TWITCH_OAUTH_ACCESS_TOKEN }}
           TWITCH_CHANNEL: ${{ secrets.TWITCH_CHANNEL }}
         run: |

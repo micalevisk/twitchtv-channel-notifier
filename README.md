@@ -15,3 +15,14 @@ npm run dev
 
 Put the values of your `.env` file as secrets in **Settings > Secrets**  
 and enable GitHub Actions feature under **Settings > Actions**
+
+### To upload your repo secrets with `.env` file content
+
+```bash
+## generate this value here: https://github.com/settings/tokens/new?scopes=repo,admin:public_key&description=ttv-channel-notifier
+GH_PERSONAL_ACCESS_TOKEN=
+## your repo name
+REPO=micalevisk/twitchtv-channel-notifier
+
+npm run update-repo-secrets --repo="$REPO" --PAT="$GH_PERSONAL_ACCESS_TOKEN"
+```

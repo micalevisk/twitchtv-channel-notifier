@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+require('dotenv-safe/config')
+
+const fetch = require('node-fetch')
+const { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } = process.env
+
+## https://dev.twitch.tv/docs/authentication/getting-tokens-oauth#oauth-client-credentials-flow
+fetch(`https://id.twitch.tv/oauth2/token?grant_type=client_credentials&client_id=${TWITCH_CLIENT_ID}&client_secret=${TWITCH_CLIENT_SECRET}`, { method: 'POST' })
+  .then(res => res.json())
+  .then(data => process.stdout.write(data.access_token))
+

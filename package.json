@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon -e js . storage.json",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "update-repo-secrets": "npx github-secret-dotenv --repository $npm_config_repo --dotEnvFilename ./.env  --githubAccessToken $npm_config_PAT"
   },
   "keywords": [
     "gh-actions",

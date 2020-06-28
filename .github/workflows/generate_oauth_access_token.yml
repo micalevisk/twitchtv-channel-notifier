@@ -1,0 +1,25 @@
+name: Generate new OAuth Access Token and update the TWITCH_OAUTH_ACCESS_TOKEN repo secret
+on:
+  # https://help.github.com/en/actions/reference/events-that-trigger-workflows#external-events-repository_dispatch
+  repository_dispatch:
+    types:
+      - webhook_notification
+jobs:
+  myEvent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          NEW_TWITCH_OAUTH_ACCESS_TOKEN="$(./generate-twitch-oauth-access-token)"
+
+          cat <<-EOF > .env
+          TWITCH_OAUTH_ACCESS_TOKEN=${NEW_TWITCH_OAUTH_ACCESS_TOKEN}
+          EOF
+
+          npm run update-repo-secrets --repo="$REPO" --PAT="$GH_PERSONAL_ACCESS_TOKEN"
+        env:
+          REPO: ${{ github.repository }}
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
