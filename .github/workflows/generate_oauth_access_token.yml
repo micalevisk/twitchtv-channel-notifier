@@ -28,7 +28,7 @@ jobs:
         run: npm ci --prod
 
       - run: |
-          NEW_TWITCH_OAUTH_ACCESS_TOKEN="$(./generate-twitch-oauth-access-token)"
+          NEW_TWITCH_OAUTH_ACCESS_TOKEN="$(IS_GH=true ./generate-twitch-oauth-access-token)"
 
           cat <<-EOF > .env
           TWITCH_OAUTH_ACCESS_TOKEN=${NEW_TWITCH_OAUTH_ACCESS_TOKEN}

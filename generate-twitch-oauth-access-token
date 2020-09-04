@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-require('dotenv-safe/config')
+
+if (!process.env.IS_GH) require('dotenv-safe/config')
 
 const fetch = require('node-fetch')
 const { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } = process.env
