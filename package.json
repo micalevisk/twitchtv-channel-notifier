@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "jest": "^26.5.3",
+    "jest-fetch-mock": "^3.0.3",
     "nodemon": "^2.0.3",
     "prettier": "^2.0.4",
     "telegram-test-api": "^2.4.4"
