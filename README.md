@@ -2,12 +2,17 @@
 
 ![Run](https://github.com/micalevisk/twitchtv-channel-notifier/workflows/Run/badge.svg?event=schedule)
 
-## Development
+## Development or local usage
 
 ```bash
-npm ci
+npm i ## development
+npm ci ## in case of local usage
+
+npm t ## all tests must be passing
+
 cp .env.example .env ## and setup your env. vars
 cp storage.json.example storage.json
+
 npm run dev
 ```
 

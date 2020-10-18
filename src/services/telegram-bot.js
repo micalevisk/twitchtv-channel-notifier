@@ -1,4 +1,4 @@
-const Slimbot = require('slimbot');
+const { TelegramClient } = require('messaging-api-telegram');
 
 /**
  *
@@ -7,25 +7,32 @@ const Slimbot = require('slimbot');
  * or username of the target channel (in the format `@channelusername`)
  */
 module.exports = function tgBot(botToken, targetChatId) {
-  const slimBot = new Slimbot(botToken);
+  const client = new TelegramClient({
+    accessToken: botToken,
+    // Hack way to inject this 'origin' value when
+    // running tests :(
+    origin: process.env.NODE_ENV === 'test' ? tgBot._serverUrl : undefined,
+  });
+
   return {
     // https://core.telegram.org/bots/api#sendmessage
     sendMessage: (text) =>
-      slimBot.sendMessage(targetChatId, text, {
+      client.sendMessage(targetChatId, text, {
         parse_mode: 'HTML',
         disable_notification: false,
         disable_web_page_preview: true,
       }),
 
     // https://core.telegram.org/bots/api#deletemessage
-    deleteMessage: (messageId) =>
-      slimBot.deleteMessage(targetChatId, messageId),
+    deleteMessage: (messageId) => client.deleteMessage(targetChatId, messageId),
 
     /** Create safe string interpolation. */
     safeMsg: (text = '') =>
       text
+        // Following: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
         .replace(/&/g, '&amp;')
         .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;'),
   };
