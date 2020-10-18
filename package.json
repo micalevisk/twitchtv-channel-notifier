@@ -8,8 +8,12 @@
     "node": ">=12"
   },
   "scripts": {
+    "postinstall": "patch-package",
+    "nodemon": "nodemon",
     "start": "node .",
     "dev": "nodemon -e js . storage.json",
+    "test": "jest",
+    "dev:test": "jest --watch",
     "format": "prettier --write .",
     "update-repo-secrets": "npx github-secret-dotenv --repository $npm_config_repo --dotEnvFilename ./.env  --githubAccessToken $npm_config_PAT"
   },
@@ -29,11 +33,14 @@
   },
   "dependencies": {
     "dotenv-safe": "^8.2.0",
+    "messaging-api-telegram": "^1.0.1",
     "node-fetch": "^2.6.1",
-    "slimbot": "^4.6.3"
+    "patch-package": "^6.2.2"
   },
   "devDependencies": {
+    "jest": "^26.5.3",
     "nodemon": "^2.0.3",
-    "prettier": "^2.0.4"
+    "prettier": "^2.0.4",
+    "telegram-test-api": "^2.4.4"
   }
 }
