@@ -1,6 +1,6 @@
 {
   "name": "twitchtv-channel-notifier",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Notify through Telegram bot if a Twitch TV channel is live.",
   "main": "./index.js",
   "engineStrict": true,
