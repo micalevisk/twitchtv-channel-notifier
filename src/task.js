@@ -35,6 +35,6 @@ module.exports = async (storage, ctx) => {
     isLive,
     idLastMessageSent:
       idLastMessageSent ||
-      (lastMessageSent && lastMessageSent.result.message_id),
+      (lastMessageSent && lastMessageSent.messageId),
   };
 };

@@ -18,9 +18,9 @@ module.exports = function tgBot(botToken, targetChatId) {
     // https://core.telegram.org/bots/api#sendmessage
     sendMessage: (text) =>
       client.sendMessage(targetChatId, text, {
-        parse_mode: 'HTML',
-        disable_notification: false,
-        disable_web_page_preview: true,
+        parseMode: 'HTML',
+        disableNotification: false,
+        disableWebPagePreview: true,
       }),
 
     // https://core.telegram.org/bots/api#deletemessage
