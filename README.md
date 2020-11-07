@@ -1,5 +1,8 @@
 # twitchtv-channel-notifier
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/740f3ecc1a5fad613461/maintainability)](https://codeclimate.com/github/micalevisk/twitchtv-channel-notifier/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/740f3ecc1a5fad613461/test_coverage)](https://codeclimate.com/github/micalevisk/twitchtv-channel-notifier/test_coverage)
+
 ![Run](https://github.com/micalevisk/twitchtv-channel-notifier/workflows/Run/badge.svg?event=schedule)
 
 ## Usage
