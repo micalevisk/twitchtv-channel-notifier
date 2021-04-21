@@ -1,12 +1,8 @@
-diff --git a/node_modules/telegram-test-api/.telegramServer.js.swp b/node_modules/telegram-test-api/.telegramServer.js.swp
-new file mode 100644
-index 0000000..b68c6d0
-Binary files /dev/null and b/node_modules/telegram-test-api/.telegramServer.js.swp differ
 diff --git a/node_modules/telegram-test-api/telegramServer.js b/node_modules/telegram-test-api/telegramServer.js
-index 853a646..185b4d0 100644
+index 8409c9a..378a86b 100644
 --- a/node_modules/telegram-test-api/telegramServer.js
 +++ b/node_modules/telegram-test-api/telegramServer.js
-@@ -211,7 +211,7 @@ class TelegramServer extends EventEmitter {
+@@ -242,7 +242,7 @@ class TelegramServer extends EventEmitter {
     */
    deleteMessage(chatId, messageId) {
      const isMessageToDelete = (update) => (
