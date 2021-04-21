@@ -14,15 +14,24 @@ const storageFilename = process.argv[2];
 const storage = readJson(storageFilename);
 
 const dispatchAction = () => {
-  const fetch = require('node-fetch');
   const { REPO, GH_PERSONAL_ACCESS_TOKEN } = process.env;
+
+  const fetch = require('node-fetch');
+
+  const responseIsOk = (res) => {
+    if (res.ok) {
+      return res;
+    }
+    throw new Error(`${res.statusText} (HTTP ${res.status})`);
+  };
+
   return fetch(`https://api.github.com/repos/${REPO}/dispatches`, {
     method: 'POST',
     body: JSON.stringify({ event_type: 'webhook_notification' }),
     headers: {
       Authorization: `Bearer ${GH_PERSONAL_ACCESS_TOKEN}`,
     },
-  });
+  }).then(responseIsOk);
 };
 
 task(storage, {
