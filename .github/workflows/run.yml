@@ -1,6 +1,9 @@
 name: Run
 
 on:
+  ## Allo trigger this workflow manually using the GitHub CLI:  gh workflow run
+  workflow_dispatch:
+
   schedule:
     - cron: '1-59/30 * * * *' # https://crontab.guru/#1-59/30_*_*_*_*
   push:
