@@ -12,6 +12,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     env:
       ARTIFACT_PATH: current-artifact
       ARTIFACT_NAME: last-storage-data
