@@ -35,7 +35,7 @@
   "dependencies": {
     "dotenv-safe": "^8.2.0",
     "messaging-api-telegram": "^1.0.6",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2",
     "patch-package": "^6.4.7"
   },
   "devDependencies": {
