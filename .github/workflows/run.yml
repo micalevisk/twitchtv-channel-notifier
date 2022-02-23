@@ -1,7 +1,7 @@
 name: Run
 
 on:
-  ## Allo trigger this workflow manually using the GitHub CLI:  gh workflow run
+  ## Allow trigger this workflow manually using the GitHub CLI
   workflow_dispatch:
 
   schedule:
@@ -53,29 +53,21 @@ jobs:
             }
           fi
 
-      - run: cat "${STORAGE_FILENAME}"
+      - name: Display storage file content
+        run: cat "$STORAGE_FILENAME"
 
-      - uses: actions/setup-node@v1
-        if: success()
+      - uses: actions/setup-node@v2
         with:
-          node-version: '12.x'
-      - name: Cache Node.js modules
-        if: success()
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
+          node-version: 'lts/*'
+          cache: 'npm'
+
       - name: Install NPM dependencies (using the lock file)
         run: npm ci --prod
 
       - name: Create path to artifact
-        if: success()
         run: mkdir -v -p ${ARTIFACT_PATH}
+
       - name: Run the task
-        if: success()
         id: last_scrap
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -89,14 +81,14 @@ jobs:
         run: |
           scrap_output_path="${ARTIFACT_PATH}/${STORAGE_FILENAME}"
           ( npm start "$STORAGE_FILENAME" ) && cp "$STORAGE_FILENAME" "$scrap_output_path"
+
       - name: Upload an artifact with the last content of storage file
-        uses: actions/upload-artifact@v1
-        if: success()
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.ARTIFACT_PATH }}
+
       - name: Delete all artifacts but the last uploaded
-        if: success()
         uses: kolpav/purge-artifacts-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
