@@ -20,7 +20,7 @@ const dispatchAction = () => {
 
   const responseIsOk = (res) => {
     if (res.ok) {
-      return res;
+      return 'The action was dispatched';
     }
     throw new Error(`${res.statusText} (HTTP ${res.status})`);
   };
@@ -49,6 +49,7 @@ task(storage, {
     }
     throw err;
   })
+  .then(console.log)
   .catch((err) => {
     console.log('Will exit with code', process.exitCode);
     console.error(err);
