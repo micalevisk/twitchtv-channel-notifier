@@ -11,6 +11,7 @@
 npm ci --prod
 cp .env.example .env ## and set up your env. vars
 cp storage.json.example storage.json
+node . storage
 ```
 
 ## Development
